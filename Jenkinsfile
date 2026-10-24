@@ -23,7 +23,14 @@ pipeline {
                 echo 'Running PyTest unit tests...'
                 bat '''
                     call venv\\Scripts\\activate.bat
-                    pytest test_app.py --junitxml=test-reports/results.xml
+                        // 1. Force directory creation
+                    if not exist test-reports mkdir test-reports
+        
+                        // 2. Run pytest outputting coverage directly to the root for better visibility
+                    pytest test_app.py --junitxml=test-reports/results.xml --cov=app --cov-report=xml:coverage.xml --cov-append
+        
+                        // 3. Verification check: List files to see exactly where it landed
+                    dir coverage.xml
                 '''
             }
             post {
@@ -35,7 +42,7 @@ pipeline {
                             recordCoverage(
                             tools: [    
                                         [ parser: 'COBERTURA', 
-                                        pattern: 'test-reports/coverage.xml'
+                                        pattern: '**/coverage.xml'
                                         ]
 
                                     ],
