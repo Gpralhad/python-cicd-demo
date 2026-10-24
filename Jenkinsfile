@@ -27,10 +27,22 @@ pipeline {
                 '''
             }
             post {
-                always {
-                    junit 'test-reports/results.xml'
+                    always {
+                            // 1. Publish standard unit test execution counts
+                            junit 'test-reports/results.xml'
+            
+                            // 2. Publish coverage visual graphs using the modern Coverage Plugin
+                            recordCoverage(
+                            tools: [    
+                                        [ parser: 'COBERTURA', 
+                                        pattern: 'test-reports/coverage.xml'
+                                        ]
+
+                                    ],
+                            sourceCodeRetention: 'LAST_BUILD'
+                            )
+                        }
                 }
-            }
         }
         stage('Deploy to DEV') {
             steps {
