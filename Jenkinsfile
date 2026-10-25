@@ -123,7 +123,7 @@ pipeline {
     post {
         always {
             // Sends 'pending', 'success', or 'failure' back to GitHub
-            githubNotify context: 'continuous-integration/jenkins', description: 'Jenkins Build Status'
+            setGitHubPullRequestStatus  context: 'continuous-integration/jenkins', description: 'Jenkins Build Status'
         }
     }
 }
