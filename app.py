@@ -8,7 +8,7 @@ ENV_NAME = os.getenv("APP_ENV", "Development")
 
 @app.route('/')
 def home():
-    return f"Welcome to the {ENV_NAME} Environment! - code from SCM!!!! -Finalcheck"
+    return f"Welcome to the {ENV_NAME} Environment! - running on port {os.getenv('PORT', 5001)}"
 
 @app.route('/health')
 def health():
