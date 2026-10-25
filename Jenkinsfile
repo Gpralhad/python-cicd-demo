@@ -55,7 +55,13 @@ pipeline {
             steps {
                 echo "Deploying locally to DEV on port %DEV_PORT%..."
                 bat '''
+                    // 1. Kill anything on the port
                     for /f "tokens=5" %%a in ('netstat -aon ^| findstr :%DEV_PORT% ^| findstr LISTENING') do taskkill /f /pid %%a || type nul
+                    
+                    // 2. Clear or delete the previous log file to prevent file locks
+                    if exist dev_log.txt del /f /q dev_log.txt || type nul
+
+                    // 3. Set variables and launch
                     set APP_ENV=Development
                     set PORT=%DEV_PORT%
                     start "" /B venv\\Scripts\\python.exe app.py > dev_log.txt 2>&1
@@ -76,6 +82,7 @@ pipeline {
                 echo "DEV Smoke Test Passed! Deploying to QA on port %QA_PORT%..."
                 bat '''
                     for /f "tokens=5" %%a in ('netstat -aon ^| findstr :%QA_PORT% ^| findstr LISTENING') do taskkill /f /pid %%a || type nul
+                    if exist qa_log.txt del /f /q qa_log.txt || type nul
                     set APP_ENV="QA Testing"
                     set PORT=%QA_PORT%
                     start "" /B venv\\Scripts\\python.exe app.py > qa_log.txt 2>&1
@@ -102,6 +109,8 @@ pipeline {
                 echo "Approved! Deploying to Preprod on port %PREPROD_PORT%..."
                 bat '''
                     for /f "tokens=5" %%a in ('netstat -aon ^| findstr :%PREPROD_PORT% ^| findstr LISTENING') do taskkill /f /pid %%a || type nul
+                    
+                    if exist preprod_log.txt del /f /q preprod_log.txt || type nul
                     set APP_ENV="Pre-Production"
                     set PORT=%PREPROD_PORT%
                     start "" /B venv\\Scripts\\python.exe app.py > preprod_log.txt 2>&1
