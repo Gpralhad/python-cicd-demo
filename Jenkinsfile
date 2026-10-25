@@ -121,7 +121,7 @@ pipeline {
     }
     // ADD THIS BLOCK AT THE VERY BOTTOM OF YOUR JENKINSFILE
     post {
-        statusChanged {
+        always {
             // Sends 'pending', 'success', or 'failure' back to GitHub
             githubNotify context: 'continuous-integration/jenkins', description: 'Jenkins Build Status'
         }
