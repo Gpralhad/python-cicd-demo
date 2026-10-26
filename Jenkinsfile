@@ -120,10 +120,20 @@ pipeline {
         }
     }
     // ADD THIS BLOCK AT THE VERY BOTTOM OF YOUR JENKINSFILE
-    post {
-        always {
-            // Sends 'pending', 'success', or 'failure' back to GitHub
-            setGitHubPullRequestStatus  context: 'continuous-integration/jenkins', description: 'Jenkins Build Status'
+     post always {
+        success {
+            // Tells GitHub the build passed
+            setGitHubPullRequestStatus(
+                state: 'SUCCESS',
+                context: 'jenkins/build-and-test'
+            )
+        }
+        failure {
+            // Tells GitHub the build failed
+            setGitHubPullRequestStatus(
+                state: 'FAILURE',
+                context: 'jenkins/build-and-test'
+            )
         }
     }
 }
