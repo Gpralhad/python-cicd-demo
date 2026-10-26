@@ -6,6 +6,9 @@ pipeline {
         PREPROD_PORT = '5003'
         // This critical line prevents Jenkins from automatically killing your background processes!
         JENKINS_NODE_COOKIE = 'dontKillMe'
+        // CRITICAL: This binds your Jenkins credential to an environment variable
+        // Make sure 'GITHUB_TOKEN_ID' matches the exact ID you gave it in Jenkins!
+        GITHUB_AUTH  = credentials('GITHUB_TOKEN') 
     }
     stages {
         stage('Initialize & Build') {
@@ -130,7 +133,7 @@ pipeline {
   curl -L \
   -X POST \
   -H "Accept: application/vnd.github+json" \
-  -H "Authorization: Bearer %GITHUB_TOKEN%" \
+  -H "Authorization: Bearer %GITHUB_AUTH%" \
   -H "X-GitHub-Api-Version: 2026-03-10" \
   https://api.github.com/repos/OWNER/REPO/statuses/SHA \
   -d '{"state":"success","target_url":"https://example.com/build/status","description":"The build succeeded!","context":"continuous-integration/jenkins"}'            '''
