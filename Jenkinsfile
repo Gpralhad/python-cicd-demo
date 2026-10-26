@@ -130,29 +130,28 @@ pipeline {
             bat '''
             set OWNER=Gpralhad
             set REPO=python-cicd-demo
-  curl -L \
-  -X POST \
-  -H "Accept: application/vnd.github+json" \
-  -H "Authorization: Bearer %GITHUB_AUTH%" \
-  -H "X-GitHub-Api-Version: 2026-03-10" \
-  https://api.github.com/repos/%OWNER%/%REPO%/statuses/%GIT_COMMIT% \
-  -d "{\\\"state\\\":\\\"success\\\",\\\"target_url\\\":\\\"https://example.com/build/status\\\",\\\"description\\\":\\\"The build succeeded!\\\",\\\"context\\\":\\\"continuous-integration/jenkins\\\"}"
+            curl -L \
+  		-X POST \
+  		-H "Accept: application/vnd.github+json" \
+  		-H "Authorization: Bearer %GITHUB_AUTH%" \
+  		-H "X-GitHub-Api-Version: 2026-03-10" \
+  		https://api.github.com/repos/%OWNER%/%REPO%/statuses/%GIT_COMMIT% \
+  		-d "{\\\"state\\\":\\\"success\\\",\\\"target_url\\\":\\\"https://example.com/build/status\\\",\\\"description\\\":\\\"The build succeeded!\\\",\\\"context\\\":\\\"continuous-integration/jenkins\\\"}"            
+		'''
         }
         failure {
             echo 'Reporting failure to GitHub...%GIT_URL%'
-            bat '''
-                @echo off
-                // Extract the "username/repo" part from the full Git URL
-                set REPO_URL=%GIT_URL%
-                set REPO_URL=%REPO_URL:https://github.com%
-                set REPO_URL=%REPO_URL:.git=%
-
-                curl -L -X POST ^
-                -H "Accept: application/vnd.github+json" ^
-                -H "Authorization: Bearer %GITHUB_TOKEN%" ^
-                https://github.com% ^
-                -d "{\\"state\\":\\"failure\\",\\"context\\":\\"jenkins/build-and-test\\",\\"description\\":\\"Build or tests failed.\\"}"
-            '''
+          bat '''
+            set OWNER=Gpralhad
+            set REPO=python-cicd-demo
+            curl -L \
+  		-X POST \
+  		-H "Accept: application/vnd.github+json" \
+  		-H "Authorization: Bearer %GITHUB_AUTH%" \
+  		-H "X-GitHub-Api-Version: 2026-03-10" \
+  		https://api.github.com/repos/%OWNER%/%REPO%/statuses/%GIT_COMMIT% \
+  		-d "{\\\"state\\\":\\\"failure\\\",\\\"target_url\\\":\\\"https://example.com/build/status\\\",\\\"description\\\":\\\"The build failed!\\\",\\\"context\\\":\\\"continuous-integration/jenkins\\\"}"            
+		'''
         }
     }
 }
