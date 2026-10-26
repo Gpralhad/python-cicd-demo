@@ -125,18 +125,15 @@ pipeline {
         success {
             echo 'Reporting success to GitHub...%GIT_URL%'
             bat '''
-                @echo off
-                :: Extract the "username/repo" part from the full Git URL
-                set REPO_URL=%GIT_URL%
-                set REPO_URL=%REPO_URL:https://github.com%
-                set REPO_URL=%REPO_URL:.git=%
-
-                curl -L -X POST ^
-                -H "Accept: application/vnd.github+json" ^
-                -H "Authorization: Bearer %GITHUB_TOKEN%" ^
-                https://github.com% ^
-                -d "{\\"state\\":\\"success\\",\\"context\\":\\"jenkins/build-and-test\\",\\"description\\":\\"All tests passed!\\"}"
-            '''
+            set OWNER=Gpralhad
+            set REPO=python-cicd-demo
+  curl -L \
+  -X POST \
+  -H "Accept: application/vnd.github+json" \
+  -H "Authorization: Bearer %GITHUB_TOKEN%" \
+  -H "X-GitHub-Api-Version: 2026-03-10" \
+  https://api.github.com/repos/OWNER/REPO/statuses/SHA \
+  -d '{"state":"success","target_url":"https://example.com/build/status","description":"The build succeeded!","context":"continuous-integration/jenkins"}'            '''
         }
         failure {
             echo 'Reporting failure to GitHub...%GIT_URL%'
