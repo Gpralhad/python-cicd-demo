@@ -142,7 +142,7 @@ pipeline {
             echo 'Reporting failure to GitHub...%GIT_URL%'
             bat '''
                 @echo off
-                :: Extract the "username/repo" part from the full Git URL
+                // Extract the "username/repo" part from the full Git URL
                 set REPO_URL=%GIT_URL%
                 set REPO_URL=%REPO_URL:https://github.com%
                 set REPO_URL=%REPO_URL:.git=%
