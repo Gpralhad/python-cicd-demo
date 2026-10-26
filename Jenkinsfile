@@ -126,7 +126,7 @@ pipeline {
      // UPDATE THIS POST BLOCK AT THE VERY BOTTOM
      post {
         success {
-            echo 'Reporting success to GitHub...%GIT_URL%'
+            echo 'Reporting success to GitHub...'
             bat '''
             set OWNER=Gpralhad
             set REPO=python-cicd-demo
@@ -140,7 +140,7 @@ pipeline {
 		'''
         }
         failure {
-            echo 'Reporting failure to GitHub...%GIT_URL%'
+            echo 'Reporting failure to GitHub...'
           bat '''
             set OWNER=Gpralhad
             set REPO=python-cicd-demo
