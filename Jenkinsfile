@@ -120,20 +120,39 @@ pipeline {
         }
     }
     // ADD THIS BLOCK AT THE VERY BOTTOM OF YOUR JENKINSFILE
+     // UPDATE THIS POST BLOCK AT THE VERY BOTTOM
      post {
         success {
-            // Tells GitHub the build passed
-            setGitHubPullRequestStatus(
-                state: 'SUCCESS',
-                context: 'jenkins/build-and-test'
-            )
+            echo 'Reporting success to GitHub...%GIT_URL%'
+            bat '''
+                @echo off
+                :: Extract the "username/repo" part from the full Git URL
+                set REPO_URL=%GIT_URL%
+                set REPO_URL=%REPO_URL:https://github.com%
+                set REPO_URL=%REPO_URL:.git=%
+
+                curl -L -X POST ^
+                -H "Accept: application/vnd.github+json" ^
+                -H "Authorization: Bearer %GITHUB_TOKEN%" ^
+                https://github.com% ^
+                -d "{\\"state\\":\\"success\\",\\"context\\":\\"jenkins/build-and-test\\",\\"description\\":\\"All tests passed!\\"}"
+            '''
         }
         failure {
-            // Tells GitHub the build failed
-            setGitHubPullRequestStatus(
-                state: 'FAILURE',
-                context: 'jenkins/build-and-test'
-            )
+            echo 'Reporting failure to GitHub...%GIT_URL%'
+            bat '''
+                @echo off
+                :: Extract the "username/repo" part from the full Git URL
+                set REPO_URL=%GIT_URL%
+                set REPO_URL=%REPO_URL:https://github.com%
+                set REPO_URL=%REPO_URL:.git=%
+
+                curl -L -X POST ^
+                -H "Accept: application/vnd.github+json" ^
+                -H "Authorization: Bearer %GITHUB_TOKEN%" ^
+                https://github.com% ^
+                -d "{\\"state\\":\\"failure\\",\\"context\\":\\"jenkins/build-and-test\\",\\"description\\":\\"Build or tests failed.\\"}"
+            '''
         }
     }
 }
