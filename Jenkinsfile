@@ -120,7 +120,7 @@ pipeline {
         }
     }
     // ADD THIS BLOCK AT THE VERY BOTTOM OF YOUR JENKINSFILE
-     post always {
+     post {
         success {
             // Tells GitHub the build passed
             setGitHubPullRequestStatus(
