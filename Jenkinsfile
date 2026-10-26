@@ -136,7 +136,7 @@ pipeline {
   -H "Authorization: Bearer %GITHUB_AUTH%" \
   -H "X-GitHub-Api-Version: 2026-03-10" \
   https://api.github.com/repos/%OWNER%/%REPO%/statuses/%GIT_COMMIT% \
-  -d '{"state":"success","target_url":"https://example.com/build/status","description":"The build succeeded!","context":"continuous-integration/jenkins"}'            '''
+  -d "{\\\"state\\\":\\\"success\\\",\\\"target_url\\\":\\\"https://example.com/build/status\\\",\\\"description\\\":\\\"The build succeeded!\\\",\\\"context\\\":\\\"continuous-integration/jenkins\\\"}"
         }
         failure {
             echo 'Reporting failure to GitHub...%GIT_URL%'
